@@ -45,5 +45,11 @@
     <Compile Include="Modelo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GrupoDelivery.Nucleo\GrupoDelivery.Nucleo.csproj">
+      <Project>{DC2E5A41-58D8-4EAF-BFFC-9922A1434718}</Project>
+      <Name>GrupoDelivery.Nucleo</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
