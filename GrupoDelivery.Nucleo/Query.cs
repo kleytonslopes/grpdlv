@@ -1,4 +1,6 @@
-﻿using MySql.Data.MySqlClient;
+﻿using GrupoDelivery.Nucleo.Helpers;
+using GrupoDelivery.Nucleo.Types;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,7 +12,7 @@ namespace GrupoDelivery.Nucleo
 {
     public class Query
     {
-        private String _query;
+        private StringBuilder _query;
         private MySqlConnection _connection;
         private MySqlTransaction _transaction;
         private Dictionary<String, Object> _parameters;
@@ -20,9 +22,12 @@ namespace GrupoDelivery.Nucleo
             _connection = connection.GetConnection();
         }
 
-        public String AddQuery(String sql)
+        public void AddQuery(String sql)
         {
-            return _query += sql;
+            if (_query == null)
+                _query = new StringBuilder();
+
+            _query.Append(sql);
         }
 
         public Dictionary<String, Object> AddParam(String key, Object value)
@@ -38,7 +43,7 @@ namespace GrupoDelivery.Nucleo
             }
             catch (System.Exception ex)
             {
-                throw new InvalidProgramException($"ERRO ON \"AddParam\" : {Environment.NewLine}{ex.ToString()}");
+                throw ErroMessage.ProgramException("AddParam", ex);
             }
         }
 
@@ -47,11 +52,13 @@ namespace GrupoDelivery.Nucleo
             try
             {
                 if (_connection == null || _connection.State != ConnectionState.Open)
-                    throw new InvalidProgramException($"A Conexão não estava Aberta!");
+                    throw ErroMessage.Operation(EErrosCode.WithOutConnection);
 
                 MySqlCommand _command = new MySqlCommand();
                 _command.Connection = _connection;
-                _command.Transaction = _transaction;
+
+                if (_transaction != null)
+                    _command.Transaction = _transaction;
 
                 if (_parameters != null && _parameters.Any())
                     foreach (var p in _parameters)
@@ -61,7 +68,7 @@ namespace GrupoDelivery.Nucleo
             }
             catch (System.Exception ex)
             {
-                throw new InvalidProgramException($"ERRO ON \"Execute\" : {Environment.NewLine}{ex.ToString()}");
+                throw ErroMessage.ProgramException("Execute", ex);
             }
         }
 
@@ -70,7 +77,7 @@ namespace GrupoDelivery.Nucleo
             try
             {
                 if (_connection == null || _connection.State != ConnectionState.Open)
-                    throw new InvalidProgramException($"A Conexão não estava Aberta!");
+                    throw ErroMessage.Operation(EErrosCode.WithOutConnection);
 
                 MySqlCommand _command = new MySqlCommand();
                 _command.Connection = _connection;
@@ -89,7 +96,7 @@ namespace GrupoDelivery.Nucleo
             }
             catch (System.Exception ex)
             {
-                throw new InvalidProgramException($"ERRO ON \"ExecuteSelect\" : {Environment.NewLine}{ex.ToString()}");
+                throw ErroMessage.ProgramException("ExecuteSelect", ex);
             }
         }
 

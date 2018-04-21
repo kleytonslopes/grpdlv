@@ -1,8 +1,10 @@
 ﻿using GrupoDelivery.AcessoDados;
 using GrupoDelivery.Entidades;
 using GrupoDelivery.Nucleo;
+using GrupoDelivery.Nucleo.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,16 +28,16 @@ namespace GrupoDelivery.Negocios
                 con.OpenConnection();
                 con.BeginTransaction();
 
-                using (MapaDAO mapaDao = new MapaDAO(con))
+                using (ModeloDAO modeloDao = new ModeloDAO(con))
                 {
                     if (modelo.IdModelo > 0)
-                        throw new InvalidOperationException("O Id do Modelo não pode ser Atribuido a um novo registro!");
+                        throw ErroMessage.Operation("O Id do Modelo não pode ser Atribuido a um novo registro!");
                     if (modelo.PrecoModelo <= 0)
-                        throw new InvalidOperationException("O Preço do Modelo não pode ser Negativo ou Ígual a 0.00!");
+                        throw ErroMessage.Operation("O Preço do Modelo não pode ser Negativo ou Ígual a 0.00!");
                     if (String.IsNullOrWhiteSpace(modelo.DescricaoModelo))
-                        throw new InvalidOperationException("A Descrição do Modelo deve conter um valor!");
+                        throw ErroMessage.Operation("A Descrição do Modelo deve conter um valor!");
 
-                    mapaDao.InsertModelo(modelo);
+                    modeloDao.InsertModelo(modelo);
                 }
 
                 con.Commit();
@@ -45,7 +47,41 @@ namespace GrupoDelivery.Negocios
                 if (con != null)
                     con.RollBack();
 
-                throw new InvalidProgramException($"{Environment.NewLine}{ex.ToString()}");
+                throw ErroMessage.ProgramException("InsertModelo", ex);
+            }
+            finally
+            {
+                if (con != null)
+                    con.CloseConnection();
+            }
+        }
+
+        public Modelo SelectModeloById(Int32 id)
+        {
+            Connection con = null;
+
+            try
+            {
+                con = new Connection();
+                con.OpenConnection();
+
+                using (ModeloDAO modeloDao = new ModeloDAO(con))
+                {
+                    DataTable table = modeloDao.SelectModelo(id);
+                    if (table != null)
+                        return Modelo.FixDataTable(table).FirstOrDefault();
+
+                    return null;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ErroMessage.ProgramException("SelectModeloById", ex);
+            }
+            finally
+            {
+                if (con != null)
+                    con.CloseConnection();
             }
         }
     }

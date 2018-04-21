@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GrupoDelivery.Entidades.Helper;
 using GrupoDelivery.Entidades.Mapping;
+using GrupoDelivery.Nucleo.Helpers;
 
 namespace GrupoDelivery.Entidades
 {
@@ -25,7 +26,7 @@ namespace GrupoDelivery.Entidades
             private set
             {
                 if (value.Length > 50)
-                    throw new InvalidOperationException("Limite de 50 caracteres para a Descrição do Modelo ultrapassados!");
+                    throw ErroMessage.Operation("Limite de 50 caracteres para a Descrição do Modelo ultrapassados!");
 
                 _descricaoModelo = value;
             }
@@ -37,7 +38,7 @@ namespace GrupoDelivery.Entidades
             get => _precoModelo; private set
             {
                 if (value <= 0)
-                    throw new InvalidOperationException("Valor Inválido para o Preço. O Valor deve ser maior que Zero!");
+                    throw ErroMessage.Operation("Valor Inválido para o Preço. O Valor deve ser maior que Zero!");
                 _precoModelo = value;
             }
         }
@@ -67,15 +68,28 @@ namespace GrupoDelivery.Entidades
         /// <returns></returns>
         public static List<Modelo> FixDataTable(DataTable table)
         {
-            return (from DataRow row in table.Rows
-                    select new Modelo
-                    {
-                        _idModelo = ParseToInt32(row, mId),
-                        DescricaoModelo = ParseToString(row, mDescricaoModelo),
-                        StatusModelo = ParseToBoolean(row, mStatusModelo),
-                        PrecoModelo = ParseToDecimal(row, mPrecoModelo),
-                        Inteiro64Modelo = ParseToInt64(row, mInteiro64Modelo)
-                    }).ToList();
+            try
+            {
+                if (table != null)
+                {
+
+                    return (from DataRow row in table.Rows
+                            select new Modelo
+                            {
+                                _idModelo = ParseToInt32(row, mId),
+                                DescricaoModelo = ParseToString(row, mDescricaoModelo),
+                                StatusModelo = ParseToBoolean(row, mStatusModelo),
+                                PrecoModelo = ParseToDecimal(row, mPrecoModelo),
+                                Inteiro64Modelo = ParseToInt64(row, mInteiro64Modelo)
+                            }).ToList();
+                }
+
+                return null;
+            }
+            catch (System.Exception ex)
+            {
+                throw ErroMessage.ProgramException("FixDataTable [Modelo]", ex);
+            }
         }
         #endregion
 

@@ -1,4 +1,6 @@
-﻿using MySql.Data.MySqlClient;
+﻿using GrupoDelivery.Nucleo.Helpers;
+using GrupoDelivery.Nucleo.Types;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,14 +21,14 @@ namespace GrupoDelivery.Nucleo
             try
             {
                 if (_connection != null && _connection.State != ConnectionState.Open)
-                    throw new InvalidProgramException($"Conexão já Aberta!");
-
+                    throw ErroMessage.Operation(EErrosCode.ConnectionIsOpen);
+#warning  CRIAR UM HOST PARA CONECTAR-SE
                 _connection = new MySqlConnection("");
                 _connection.Open();
             }
             catch (Exception ex)
             {
-                throw new InvalidProgramException($"ERRO ON \"OpenConnection\" : {Environment.NewLine}{ex.ToString()}");
+                throw ErroMessage.ProgramException("OpenConnection", ex);
             }
         }
 
@@ -35,13 +37,13 @@ namespace GrupoDelivery.Nucleo
             try
             {
                 if (_connection == null || _connection.State != ConnectionState.Open)
-                    throw new InvalidProgramException($"Conexão não estava Aberta!");
+                    throw ErroMessage.Operation(EErrosCode.WithOutConnection);
 
                 _transaction = _connection.BeginTransaction();
             }
             catch (Exception ex)
             {
-                throw new InvalidProgramException($"ERRO ON \"BeginTransaction\" : {Environment.NewLine}{ex.ToString()}");
+                throw ErroMessage.ProgramException("BeginTransaction", ex);
             }
         }
 
@@ -55,7 +57,7 @@ namespace GrupoDelivery.Nucleo
             }
             catch (Exception ex)
             {
-                throw new InvalidProgramException($"ERRO ON \"CloseConnection\" : {Environment.NewLine}{ex.ToString()}");
+                throw ErroMessage.ProgramException("CloseConnection", ex);
             }
         }
 
@@ -69,13 +71,13 @@ namespace GrupoDelivery.Nucleo
             try
             {
                 if(_transaction == null)
-                    throw new InvalidProgramException($"Não havia uma transação Aberta!");
+                    throw ErroMessage.Operation(EErrosCode.WithOutTransaction);
 
                 _transaction.Commit();
             }
             catch (System.Exception ex)
             {
-                throw new InvalidProgramException($"ERRO ON \"Commit\" : {Environment.NewLine}{ex.ToString()}");
+                throw ErroMessage.ProgramException("Commit", ex);
             }
         }
 
@@ -84,13 +86,13 @@ namespace GrupoDelivery.Nucleo
             try
             {
                 if (_transaction == null)
-                    throw new InvalidProgramException($"Não havia uma transação Aberta!");
+                    throw ErroMessage.Operation(EErrosCode.WithOutTransaction);
 
                 _transaction.Rollback();
             }
             catch (System.Exception ex)
             {
-                throw new InvalidProgramException($"ERRO ON \"Commit\" : {Environment.NewLine}{ex.ToString()}");
+                throw ErroMessage.ProgramException("RollBack", ex);
             }
         }
     }
