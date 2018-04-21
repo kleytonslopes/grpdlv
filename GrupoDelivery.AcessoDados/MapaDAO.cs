@@ -9,13 +9,18 @@ using GrupoDelivery.Nucleo;
 
 namespace GrupoDelivery.AcessoDados
 {
-    public class MapaDAO : MapaModelo
+    public class MapaDAO : MapaModelo, IDisposable
     {
         private readonly Connection con;
 
         public MapaDAO(Connection connection)
         {
             this.con = connection;
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
         }
 
         public void InsertModelo(Modelo modelo)

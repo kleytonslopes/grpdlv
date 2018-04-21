@@ -12,6 +12,7 @@ namespace GrupoDelivery.Nucleo
     public class Connection
     {
         private MySqlConnection _connection;
+        private MySqlTransaction _transaction;
 
         public void OpenConnection()
         {
@@ -28,6 +29,22 @@ namespace GrupoDelivery.Nucleo
                 throw new InvalidProgramException($"ERRO ON \"OpenConnection\" : {Environment.NewLine}{ex.ToString()}");
             }
         }
+
+        public void BeginTransaction()
+        {
+            try
+            {
+                if (_connection == null || _connection.State != ConnectionState.Open)
+                    throw new InvalidProgramException($"Conexão não estava Aberta!");
+
+                _transaction = _connection.BeginTransaction();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidProgramException($"ERRO ON \"BeginTransaction\" : {Environment.NewLine}{ex.ToString()}");
+            }
+        }
+
         public void CloseConnection()
         {
             try
@@ -45,6 +62,36 @@ namespace GrupoDelivery.Nucleo
         public MySqlConnection GetConnection()
         {
             return _connection;
+        }
+
+        public void Commit()
+        {
+            try
+            {
+                if(_transaction == null)
+                    throw new InvalidProgramException($"Não havia uma transação Aberta!");
+
+                _transaction.Commit();
+            }
+            catch (System.Exception ex)
+            {
+                throw new InvalidProgramException($"ERRO ON \"Commit\" : {Environment.NewLine}{ex.ToString()}");
+            }
+        }
+
+        public void RollBack()
+        {
+            try
+            {
+                if (_transaction == null)
+                    throw new InvalidProgramException($"Não havia uma transação Aberta!");
+
+                _transaction.Rollback();
+            }
+            catch (System.Exception ex)
+            {
+                throw new InvalidProgramException($"ERRO ON \"Commit\" : {Environment.NewLine}{ex.ToString()}");
+            }
         }
     }
 }

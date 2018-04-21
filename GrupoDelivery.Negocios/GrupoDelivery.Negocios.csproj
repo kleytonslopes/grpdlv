@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>dba09b58-7a2e-4eb7-98d4-e96876b1c712</ProjectGuid>
+    <ProjectGuid>{DBA09B58-7A2E-4EB7-98D4-E96876B1C712}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GrupoDelivery.Negocios</RootNamespace>
@@ -30,24 +30,32 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System"/>
-    
-    <Reference Include="System.Core"/>
-    <Reference Include="System.Xml.Linq"/>
-    <Reference Include="System.Data.DataSetExtensions"/>
-    
-    
-    <Reference Include="Microsoft.CSharp"/>
-    
-    <Reference Include="System.Data"/>
-    
-    <Reference Include="System.Net.Http"/>
-    
-    <Reference Include="System.Xml"/>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="ModeloNegocio.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GrupoDelivery.AcessoDados\GrupoDelivery.AcessoDados.csproj">
+      <Project>{DB8B2CF5-71B4-4EBC-B5E0-08FE7DABFE03}</Project>
+      <Name>GrupoDelivery.AcessoDados</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GrupoDelivery.Entidades\GrupoDelivery.Entidades.csproj">
+      <Project>{0E6D5C5A-E7D0-4046-8604-C88A7C2817A3}</Project>
+      <Name>GrupoDelivery.Entidades</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GrupoDelivery.Nucleo\GrupoDelivery.Nucleo.csproj">
+      <Project>{DC2E5A41-58D8-4EAF-BFFC-9922A1434718}</Project>
+      <Name>GrupoDelivery.Nucleo</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
- </Project>
+</Project>
