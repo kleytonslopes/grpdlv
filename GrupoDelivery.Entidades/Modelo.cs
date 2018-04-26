@@ -84,7 +84,7 @@ namespace GrupoDelivery.Entidades
                             }).ToList();
                 }
 
-                return null;
+                return new List<Modelo>();
             }
             catch (System.Exception ex)
             {

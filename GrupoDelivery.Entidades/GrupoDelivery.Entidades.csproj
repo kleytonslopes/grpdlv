@@ -41,7 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Category.cs" />
     <Compile Include="Helper\DataParse.cs" />
+    <Compile Include="Mapping\CategoryMap.cs" />
     <Compile Include="Mapping\MapaModelo.cs" />
     <Compile Include="Modelo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
