@@ -12,11 +12,7 @@ namespace GrupoDelivery.Nucleo
 {
     public class Query
     {
-        private StringBuilder _query;
-        private MySqlConnection _connection;
-        private MySqlTransaction _transaction;
-        private Dictionary<String, Object> _parameters;
-
+        
         public Query(Connection connection)
         {
             _connection = connection.GetConnection();
