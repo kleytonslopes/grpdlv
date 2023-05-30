@@ -13,16 +13,7 @@ namespace GrupoDelivery.Nucleo
 {
     public class Connection
     {
-        private MySqlConnection _connection;
-        private MySqlTransaction _transaction;
-
-        public void OpenConnection()
-        {
-            try
-            {
-                if (_connection != null && _connection.State != ConnectionState.Open)
-                    throw ErroMessage.Operation(EErrosCode.ConnectionIsOpen);
-#warning  CRIAR UM HOST PARA CONECTAR-SE
+HOST PARA CONECTAR-SE
                 _connection = new MySqlConnection("");
                 _connection.Open();
             }
